@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'name.remal.check-dependency-updates' version '1.0.164'
+    id 'jacoco'
+}
+
+group 'com.dz.io'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.13'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+}
+
