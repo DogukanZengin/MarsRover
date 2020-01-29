@@ -50,6 +50,36 @@ public class RoverSpec {
     }
 
     @Test
+    public void whenOrdersAreSetThenOrderListPopulated(){
+        rover.setOrders("LRF");
+        assertThat(rover.getOrders(),hasSize(3));
+        assertThat(rover.getOrders(),contains(Order.LEFT,Order.RIGHT,Order.INVALID));
+    }
+
+    @Test
+    public void whenProcessOrderThenLocationIsSet(){
+        Surface surface = new Surface(20,20);
+        rover.processOrder(Order.LEFT,surface.getMax());
+        assertThat(rover.getLocation().getDirection(),is(Direction.WEST));
+        rover.processOrder(Order.MOVE_FORWARD,surface.getMax());
+        assertThat(rover.getLocation().getCoordinate().getX(),is(14));
+        rover.processOrder(Order.RIGHT,surface.getMax());
+        assertThat(rover.getLocation().getDirection(),is(Direction.NORTH));
+        rover.processOrder(Order.MOVE_FORWARD,surface.getMax());
+        assertThat(rover.getLocation().getCoordinate().getY(),is(20));
+    }
+
+    @Test
+    public void whenOrdersProcessedThenRoverLocationIsSet(){
+        Surface surface = new Surface(20,20);
+        rover.setOrders("LMLMRRM");
+        rover.processOrders(surface.getMax());
+        Coordinate expected = new Coordinate(14,20);
+        assertThat(rover.getLocation().getDirection(),is(Direction.NORTH));
+        assertThat(rover.getLocation().getCoordinate(),is(expected));
+    }
+
+    @Test
     public void whenDisplayLocationThenPropsAreCorrect(){
         assertThat(rover.displayLocation(),is("15 20 N"));
     }

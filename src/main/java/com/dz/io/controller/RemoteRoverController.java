@@ -1,62 +1,33 @@
 package com.dz.io.controller;
 
-import com.dz.io.entity.*;
+import com.dz.io.entity.Rover;
+import com.dz.io.entity.Surface;
 import com.dz.io.factory.RoverFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RemoteRoverController {
 
-    private Rover rover;
-    private List<Order> orders;
+    private List<Rover> rovers;
     private Surface surface;
 
-    public RemoteRoverController buildRover(Character shortDesc, int x, int y){
-        rover = RoverFactory.createInstance(shortDesc,x,y);
-        return this;
+    public RemoteRoverController(int x, int y) {
+        rovers = new ArrayList<>();
+        surface = new Surface(x, y);
     }
 
-    public RemoteRoverController buildOrders(String orderLiteral){
-        orders = Order.extractOrders(orderLiteral);
-        return this;
-    }
-
-    public RemoteRoverController buildSurface(int maxX, int maxY){
-        surface =  new Surface(maxX,maxY);
-        return this;
-    }
-
-    public void processOrders(){
-        for (Order order: orders) {
-            processOrder(order, surface.getMax());
-        }
-    }
-
-    public void processOrder(Order order, Coordinate max){
-        switch (order){
-            case LEFT:
-                rover.turnLeft();
-                break;
-            case RIGHT:
-                rover.turnRight();
-                break;
-            case MOVE_FORWARD:
-                rover.moveForward(max);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public Rover getRover() {
-        return rover;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
+    public List<Rover> getRovers() {
+        return rovers;
     }
 
     public Surface getSurface() {
         return surface;
+    }
+
+    public Rover landRover(Character shortDesc, int x, int y){
+        Rover rover = RoverFactory.createInstance(shortDesc,x ,y);
+        rovers.add(rover);
+        return rover;
     }
 }

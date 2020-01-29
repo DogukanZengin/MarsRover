@@ -1,6 +1,7 @@
 package com.dz.io;
 
 import com.dz.io.controller.RemoteRoverController;
+import com.dz.io.entity.Rover;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,30 +14,31 @@ public class Application {
 
     public static void main(String[] args) {
 
-        List<RemoteRoverController> controllers = new ArrayList<>();
+        RemoteRoverController controller;
         try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
 
             int maxX = bufferedReader.read();
             int maxY = bufferedReader.read();
+            controller = new RemoteRoverController(maxX, maxY);
+
             bufferedReader.readLine();
             String lineInput;
             while(!(lineInput = bufferedReader.readLine()).equals("")){
                 String[] line = lineInput.split(" ");
-                RemoteRoverController controller = new RemoteRoverController();
                 int x = Integer.parseInt(line[0]);
                 int y = Integer.parseInt(line[1]);
                 char direction = line[2].charAt(0);
                 String orderLiteral = line[3];
-                controller.buildRover(direction,x,y).buildSurface(maxX,maxY).buildOrders(orderLiteral);
-                controllers.add(controller);
+                controller.landRover(direction, x, y).setOrders(orderLiteral);
             }
+
+            for (Rover rover: controller.getRovers()) {
+                rover.processOrders(controller.getSurface().getMax());
+                System.out.println(rover.displayLocation());
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        for (RemoteRoverController controller: controllers) {
-            controller.processOrders();
-            System.out.println(controller.getRover().displayLocation());
         }
 
     }
